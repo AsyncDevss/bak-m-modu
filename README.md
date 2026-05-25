@@ -13,8 +13,3 @@ Bakım modunu yönetmek ve bakım sırasında sunucuya giriş yapabilmek için y
 Enes tarafından yapılmıştır.
 """
 
-file_name = "bakim-readme.md"
-with open(file_name, "w", encoding="utf-8") as file:
-file.write(readme_bakim_content)
-
-print(f"File generated successfully: {file_name}")
