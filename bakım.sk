@@ -1,0 +1,48 @@
+options:
+    p: &e&lSUNUCU &8» &r
+    yetki: skript.bakim
+    yetki-mesaj: &cBu komutu kullanmak için gerekli yetkiye sahip değilsin!
+
+on load:
+    if {bakimmodu} is not set:
+        set {bakimmodu} to false
+
+command /bakım [<text>]:
+    aliases: /bakim
+    permission: {@yetki}
+    permission message: {@yetki-mesaj}
+    trigger:
+        if arg-1 is not set:
+            send "{@p}&7Kullanım: &e/bakım <aç/kapat>" to player
+            stop
+            
+        if arg-1 is "aç" or "ac":
+            if {bakimmodu} is true:
+                send "{@p}&cSunucu zaten şu anda bakım modunda!" to player
+                stop
+                
+            set {bakimmodu} to true
+            broadcast "{@p}&c&lDİKKAT! &7Sunucu yetkililer tarafından &4&lBAKIM MODUNA &7alındı."
+            
+            loop all players:
+                if loop-player does not have permission "{@yetki}":
+                    kick loop-player because "%nl%&c&lSunucu Bakımda!%nl%%nl%&7Şu anda sunucuda güncelleme ve bakım çalışması yapılmaktadır.%nl%&7Anlayışınız için teşekkür ederiz.%nl%%nl%&eGelişmeler için Discord adresimizi takip edin."
+            stop
+            
+        if arg-1 is "kapat":
+            if {bakimmodu} is false:
+                send "{@p}&cSunucu zaten bakım modunda değil!" to player
+                stop
+                
+            set {bakimmodu} to false
+            broadcast "{@p}&a&lMÜJDE! &7Sunucu bakımı bitmiştir. Girişler tekrardan aktif edildi!"
+            stop
+
+on connect:
+    if {bakimmodu} is true:
+        if player does not have permission "{@yetki}":
+            reject connection because "%nl%&c&lSunucu Bakımda!%nl%%nl%&7Şu anda sunucuda güncelleme ve bakım çalışması yapılmaktadır.%nl%&7Anlayışınız için teşekkür ederiz.%nl%%nl%&eGelişmeler için Discord adresimizi takip edin."
+
+on tab complete of "/bakım" or "/bakim":
+    add "aç" to completions
+    add "kapat" to completions
